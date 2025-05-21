@@ -1,9 +1,11 @@
+import os
 from typing import Literal, Optional
 
 # во 2 версии Pydantic модуль BaseSettings
 # был вынесен в отдельную библиотеку pydantic-settings
 # from pydantic import BaseSettings
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 
 class Settings(BaseSettings):
@@ -43,10 +45,11 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
 
-    # Со 2 версии Pydantic, class Config был заменен на атрибут model_config
-    # class Config:
-    #     env_file = ".env"
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(
+        env_file=os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env"
+        )
+    )
 
 
 settings = Settings()
