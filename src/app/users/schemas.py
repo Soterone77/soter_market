@@ -16,6 +16,12 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserAuth(UserBase):
+    """Схема для создания пользователя."""
+
+    password: str
+
+
 class UserUpdate(BaseModel):
     """Схема для обновления пользователя."""
 

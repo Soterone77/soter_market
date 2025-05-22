@@ -1,11 +1,7 @@
 import os
 from typing import Literal, Optional
 
-# во 2 версии Pydantic модуль BaseSettings
-# был вынесен в отдельную библиотеку pydantic-settings
-# from pydantic import BaseSettings
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 
 
 class Settings(BaseSettings):

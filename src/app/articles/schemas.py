@@ -4,7 +4,7 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 from app.categories.schemas import Category
-from app.users.users import User
+from app.users.schemas import User
 
 
 class ArticleBase(BaseModel):

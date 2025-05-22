@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from app.articles.router import router as router_articles
 from app.categories.router import router as router_categories
+from app.users.router import router_users, router_auth
 
 app = FastAPI()
-
+app.include_router(router_auth)
+app.include_router(router_users)
 app.include_router(router_articles)
 app.include_router(router_categories)
 
