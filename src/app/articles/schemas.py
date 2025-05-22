@@ -1,4 +1,4 @@
-# schemas/articles.py
+# app/schemas/articles.py
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
@@ -38,7 +38,6 @@ class ArticleInDB(ArticleBase):
     user_id: int
     created_at: datetime
     updated_at: datetime
-    # Убираем is_deleted: bool
 
     class Config:
         from_attributes = True
@@ -51,14 +50,16 @@ class Article(ArticleInDB):
     user: User
 
 
-class ArticleList(BaseModel):
+class ArticleListResponse(BaseModel):
     """Схема для списка статей с пагинацией."""
 
-    items: List[Article]
+    items: List[ArticleInDB]
     total: int
     page: int
     page_size: int
-    pages: int
+    total_pages: int
+    has_next: bool
+    has_prev: bool
 
 
 class DeletedArticleBase(BaseModel):
