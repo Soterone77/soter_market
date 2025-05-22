@@ -1,4 +1,4 @@
-# schemas/models.py
+# schemas/articles.py
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
@@ -38,7 +38,7 @@ class ArticleInDB(ArticleBase):
     user_id: int
     created_at: datetime
     updated_at: datetime
-    is_deleted: bool
+    # Убираем is_deleted: bool
 
     class Config:
         from_attributes = True
@@ -64,7 +64,6 @@ class ArticleList(BaseModel):
 class DeletedArticleBase(BaseModel):
     """Базовая схема удаленной статьи."""
 
-    original_id: int
     title: str
     content: str
     image_url: str

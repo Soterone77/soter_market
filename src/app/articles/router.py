@@ -1,8 +1,15 @@
+# app/articles/router.py
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from datetime import datetime
 
 from app.articles.dao import ArticlesDAO
-from app.articles.schemas import ArticleInDB, ArticleCreate, ArticleUpdate
+from app.articles.deleted_dao import DeletedArticlesDAO
+from app.articles.schemas import (
+    ArticleInDB,
+    ArticleCreate,
+    ArticleUpdate,
+    DeletedArticleInDB,
+)
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 
@@ -95,7 +102,7 @@ async def update_article(
 
 @router.delete("/{article_id}")
 async def delete_article(article_id: int, user: Users = Depends(get_current_user)):
-    """Удалить статью (только свою) - мягкое удаление"""
+    """Удалить статью (только свою) - настоящее фейковое удаление"""
 
     # Проверяем, существует ли статья
     existing_article = await ArticlesDAO.find_one_or_none(id=article_id)
@@ -106,14 +113,8 @@ async def delete_article(article_id: int, user: Users = Depends(get_current_user
     if existing_article["user_id"] != user.id:
         raise HTTPException(status_code=403, detail="Нет прав для удаления этой статьи")
 
-    # Проверяем, не удалена ли уже статья
-    if existing_article["is_deleted"]:
-        raise HTTPException(status_code=410, detail="Статья уже удалена")
-
-    # Помечаем статью как удаленную
-    deleted_article = await ArticlesDAO.update(
-        filter_by={"id": article_id}, is_deleted=True, updated_at=datetime.utcnow()
-    )
+    # Выполняем настоящее фейковое удаление (перемещение в deleted_articles)
+    deleted_article = await ArticlesDAO.hard_fake_delete(article_id)
 
     if not deleted_article:
         raise HTTPException(status_code=500, detail="Ошибка при удалении статьи")

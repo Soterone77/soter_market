@@ -1,52 +1,45 @@
 # app/articles/dao.py
-from app.articles.models import Articles
+from datetime import datetime
+from app.articles.models import Articles, DeletedArticles
+from app.articles.deleted_dao import DeletedArticlesDAO
 from app.repo.base import BaseDAO
+from app.core.database import async_session_maker
 
 
 class ArticlesDAO(BaseDAO):
     model = Articles
 
     @classmethod
-    async def find_all(cls, **filter_by):
-        """Переопределяем для фильтрации удаленных статей по умолчанию"""
-        # Добавляем фильтр по is_deleted, если он не указан явно
-        if "is_deleted" not in filter_by:
-            filter_by["is_deleted"] = False
+    async def hard_fake_delete(cls, article_id: int):
+        """Настоящее фейковое удаление"""
+        async with async_session_maker() as session:
+            try:
+                # 1. Получаем статью для удаления
+                article = await cls.find_one_or_none(id=article_id)
+                if not article:
+                    return None
 
-        return await super().find_all(**filter_by)
+                # 2. Создаем запись в deleted_articles
+                deleted_article_data = {
+                    "title": article["title"],
+                    "content": article["content"],
+                    "image_url": article["image_url"],
+                    "category_id": article["category_id"],
+                    "user_id": article["user_id"],
+                    "created_at": article["created_at"],
+                    "updated_at": article["updated_at"],
+                    "deleted_at": datetime.utcnow(),
+                }
 
-    @classmethod
-    async def find_one_or_none(cls, **filter_by):
-        """Переопределяем для фильтрации удаленных статей по умолчанию"""
-        # Добавляем фильтр по is_deleted, если он не указан явно
-        if "is_deleted" not in filter_by:
-            filter_by["is_deleted"] = False
+                deleted_article = await DeletedArticlesDAO.add(**deleted_article_data)
+                if not deleted_article:
+                    return None
 
-        return await super().find_one_or_none(**filter_by)
+                # 3. Удаляем статью из основной таблицы
+                await cls.delete(id=article_id)
 
-    @classmethod
-    async def find_all_including_deleted(cls, **filter_by):
-        """Специальный метод для получения всех статей, включая удаленные"""
-        return await super().find_all(**filter_by)
+                return deleted_article
 
-    @classmethod
-    async def find_deleted_only(cls, **filter_by):
-        """Специальный метод для получения только удаленных статей"""
-        filter_by["is_deleted"] = True
-        return await super().find_all(**filter_by)
-
-    @classmethod
-    async def soft_delete(cls, **filter_by):
-        """Мягкое удаление статьи"""
-        # Убеждаемся, что обновляем только неудаленные записи
-        if "is_deleted" not in filter_by:
-            filter_by["is_deleted"] = False
-
-        return await super().update(filter_by, is_deleted=True)
-
-    @classmethod
-    async def restore(cls, **filter_by):
-        """Восстановление мягко удаленной статьи"""
-        # При восстановлении ищем среди удаленных записей
-        filter_by["is_deleted"] = True
-        return await super().update(filter_by, is_deleted=False)
+            except Exception as e:
+                await session.rollback()
+                raise e
