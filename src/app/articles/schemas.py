@@ -1,10 +1,10 @@
-# schemas/articles.py
+# schemas/models.py
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
 
-from app.schemas.categories import Category
-from app.schemas.users import User
+from app.categories.schemas import Category
+from app.users.users import User
 
 
 class ArticleBase(BaseModel):

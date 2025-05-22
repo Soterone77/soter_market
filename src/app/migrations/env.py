@@ -8,9 +8,9 @@ from alembic import context
 
 from app.core.config import settings
 from app.core.database import Base
-from app.models.articles import Articles, DeletedArticles
-from app.models.categories import Categories
-from app.models.users import Users
+from app.articles.models import Articles, DeletedArticles
+from app.categories.models import Categories
+from app.users.models import Users
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 

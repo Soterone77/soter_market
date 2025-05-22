@@ -1,12 +1,11 @@
-# models/articles.py
+# models/models.py
 from datetime import datetime
-from typing import Optional
 from sqlalchemy import String, Text, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
-from app.models.categories import Categories
-from app.models.users import Users
+from app.categories.models import Categories
+from app.users.models import Users
 
 
 class Articles(Base):
