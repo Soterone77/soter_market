@@ -22,19 +22,17 @@ router_users = APIRouter(
 
 
 @router_auth.post("/register", status_code=201)
-async def register_user(
-    email: Annotated[str, Form()], password: Annotated[str, Form()]
-):
-    existing_user = await UserDAO.find_one_or_none(email=email)
+async def register_user(user_data: UserCreate):
+    existing_user = await UserDAO.find_one_or_none(email=user_data.email)
     if existing_user:
         raise UserAlreadyExistsException
-    hashed_password = get_password_hash(password)
-    new_user = await UserDAO.add(email=email, hashed_password=hashed_password)
+    hashed_password = get_password_hash(user_data.password)
+    new_user = await UserDAO.add(email=user_data.email, hashed_password=hashed_password)
     if not new_user:
         raise CannotAddDataToDatabase
 
     # Отправляем email через Celery (асинхронно)
-    send_registration_confirmation_email.delay(email)
+    send_registration_confirmation_email.delay(user_data.email)
 
     return {"message": "Пользователь успешно зарегистрирован"}
 

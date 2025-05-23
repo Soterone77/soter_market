@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 
 import pytest
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from sqlalchemy import insert
 
 from app.articles.models import Articles, DeletedArticles
@@ -93,20 +93,22 @@ def event_loop(request):
 @pytest.fixture(scope="function")
 async def ac():
     "Асинхронный клиент для тестирования эндпоинтов"
-    async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
-        yield ac
+    transport = ASGITransport(app=fastapi_app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        yield client
 
 
 @pytest.fixture(scope="session")
 async def authenticated_ac():
     "Асинхронный аутентифицированный клиент для тестирования эндпоинтов"
-    async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
-        await ac.post(
-            "/api/v1/auth/login",
+    transport = ASGITransport(app=fastapi_app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        await client.post(
+            "/auth/login",
             json={
                 "email": "test@test.com",
                 "password": "test",
             },
         )
-        assert ac.cookies["market_access_token"]
-        yield ac
+        assert client.cookies["market_access_token"]
+        yield client
