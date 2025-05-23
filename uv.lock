@@ -952,6 +952,18 @@ wheels = [
 ]
 
 [[package]]
+name = "pytest-asyncio"
+version = "0.26.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8e/c4/453c52c659521066969523e87d85d54139bbd17b78f09532fb8eb8cdb58e/pytest_asyncio-0.26.0.tar.gz", hash = "sha256:c4df2a697648241ff39e7f0e4a73050b03f123f760673956cf0d72a4990e312f", size = 54156 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/20/7f/338843f449ace853647ace35870874f69a764d251872ed1b4de9f234822c/pytest_asyncio-0.26.0-py3-none-any.whl", hash = "sha256:7b51ed894f4fbea1340262bdae5135797ebbe21d8638978e35d31c6d19f72fb0", size = 19694 },
+]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 source = { registry = "https://pypi.org/simple" }
@@ -1118,10 +1130,12 @@ dependencies = [
     { name = "fastapi-cache2", extra = ["redis"] },
     { name = "flower" },
     { name = "greenlet" },
+    { name = "httpx" },
     { name = "passlib", extra = ["bcrypt"] },
     { name = "pillow" },
     { name = "pydantic-settings" },
     { name = "pytest" },
+    { name = "pytest-asyncio" },
     { name = "python-jose" },
     { name = "python-json-logger" },
     { name = "sqlalchemy" },
@@ -1137,10 +1151,12 @@ requires-dist = [
     { name = "fastapi-cache2", extras = ["redis"], specifier = ">=0.2.2" },
     { name = "flower", specifier = ">=2.0.1" },
     { name = "greenlet", specifier = ">=3.2.2" },
+    { name = "httpx", specifier = ">=0.28.1" },
     { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4" },
     { name = "pillow", specifier = ">=11.2.1" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
     { name = "pytest", specifier = ">=8.3.5" },
+    { name = "pytest-asyncio", specifier = ">=0.26.0" },
     { name = "python-jose", specifier = ">=3.4.0" },
     { name = "python-json-logger", specifier = ">=3.3.0" },
     { name = "sqlalchemy", specifier = ">=2.0.41" },

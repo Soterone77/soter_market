@@ -1,0 +1,35 @@
+[
+    {
+        "id": 101,
+        "title": "Устаревшие технологии 2023",
+        "content": "Обзор технологий, которые потеряли актуальность в прошлом году. От устаревших фреймворков до неудачных стартапов - анализ причин их провала и уроки для будущего.",
+        "image_url": "https://s3.ru-7.storage.selcloud.ru/test-public-bucket1/articles/1/old-tech.jpg",
+        "category_id": 1,
+        "user_id": 1,
+        "created_at": "2023-12-01T10:00:00",
+        "updated_at": "2023-12-15T14:30:00",
+        "deleted_at": "2024-01-10T09:15:00"
+    },
+    {
+        "id": 102,
+        "title": "Крах криптовалютного рынка",
+        "content": "Анализ причин падения криптовалютного рынка в 2023 году. Экспертные мнения о будущем цифровых активов и прогнозы восстановления.",
+        "image_url": "https://s3.ru-7.storage.selcloud.ru/test-public-bucket1/articles/2/crypto-crash.jpg",
+        "category_id": 2,
+        "user_id": 2,
+        "created_at": "2023-11-20T11:45:00",
+        "updated_at": "2023-11-25T16:20:00",
+        "deleted_at": "2024-01-05T12:00:00"
+    },
+    {
+        "id": 103,
+        "title": "Отмененная миссия на Марс",
+        "content": "Почему амбициозная миссия на Марс была отложена на неопределенный срок. Технические сложности и финансовые проблемы проекта.",
+        "image_url": "https://s3.ru-7.storage.selcloud.ru/test-public-bucket1/articles/1/mars-mission.jpg",
+        "category_id": 3,
+        "user_id": 1,
+        "created_at": "2023-10-10T08:30:00",
+        "updated_at": "2023-10-20T10:45:00",
+        "deleted_at": "2023-12-28T15:30:00"
+    }
+]
