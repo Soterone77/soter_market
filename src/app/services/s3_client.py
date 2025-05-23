@@ -44,6 +44,24 @@ class S3Client:
         except ClientError as e:
             print(f"Error uploading file: {e}")
 
+    async def upload_file_from_memory(
+        self,
+        file_content: bytes,
+        object_name: str,
+    ):
+        """Загрузить файл из памяти (bytes) в S3"""
+        try:
+            async with self.get_client() as client:
+                await client.put_object(
+                    Bucket=self.bucket_name,
+                    Key=object_name,
+                    Body=file_content,
+                )
+                print(f"File {object_name} uploaded to {self.bucket_name}")
+        except ClientError as e:
+            print(f"Error uploading file from memory: {e}")
+            raise
+
     async def delete_file(self, object_name: str):
         try:
             async with self.get_client() as client:
@@ -70,8 +88,8 @@ async def main():
     s3_client = S3Client(
         access_key=settings.S3_ACCESS_KEY,
         secret_key=settings.S3_SECRET_KEY,
-        endpoint_url="https://s3.ru-7.storage.selcloud.ru",  # для Selectel используйте https://s3.ru-7.storage.selcloud.ru
-        bucket_name="test-public-bucket1",
+        endpoint_url=settings.S3_ENDPOINT_URL,
+        bucket_name=settings.S3_BUCKET_NAME,
     )
 
     # Проверка, что мы можем загрузить, скачать и удалить файл

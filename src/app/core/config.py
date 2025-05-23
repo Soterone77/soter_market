@@ -43,6 +43,8 @@ class Settings(BaseSettings):
 
     S3_ACCESS_KEY: str
     S3_SECRET_KEY: str
+    S3_ENDPOINT_URL: str
+    S3_BUCKET_NAME: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(
