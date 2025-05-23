@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from app.articles.router import router as router_articles
 from app.categories.router import router as router_categories
 from app.users.router import router_users, router_auth
@@ -12,6 +13,26 @@ from app.exceptions import (
 )
 
 app = FastAPI()
+
+# Подключение CORS, чтобы запросы к API могли приходить из браузера
+origins = [
+    # 3000 - порт, на котором работает фронтенд на React.js
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
+    allow_headers=[
+        "Content-Type",
+        "Set-Cookie",
+        "Access-Control-Allow-Headers",
+        "Access-Control-Allow-Origin",
+        "Authorization",
+    ],
+)
 
 # Эндпоинты, которые не требуют аутентификации
 EXCLUDED_PATHS = {
