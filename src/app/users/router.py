@@ -8,6 +8,7 @@ from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.models import Users
 from app.users.schemas import UserInDB, UserCreate, UserAuth
+from app.tasks.tasks import send_registration_confirmation_email
 
 router_auth = APIRouter(
     prefix="/auth",
@@ -31,6 +32,11 @@ async def register_user(
     new_user = await UserDAO.add(email=email, hashed_password=hashed_password)
     if not new_user:
         raise CannotAddDataToDatabase
+
+    # Отправляем email через Celery (асинхронно)
+    send_registration_confirmation_email.delay(email)
+
+    return {"message": "Пользователь успешно зарегистрирован"}
 
 
 @router_auth.post("/login")
