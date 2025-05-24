@@ -1,13 +1,11 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, Response, Form
+from fastapi import APIRouter, Depends, Response
 
 from app.exceptions import CannotAddDataToDatabase, UserAlreadyExistsException
 from app.users.auth import authenticate_user, create_access_token, get_password_hash
 from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-from app.users.schemas import UserInDB, UserCreate, UserAuth
+from app.users.schemas import UserCreate, UserAuth
 from app.tasks.tasks import send_registration_confirmation_email
 
 router_auth = APIRouter(

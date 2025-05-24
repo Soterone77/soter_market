@@ -1,10 +1,13 @@
 # models/models.py
 from datetime import datetime
-from typing import List, Optional
+from typing import List, TYPE_CHECKING
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.articles.models import Articles
 
 
 class Categories(Base):

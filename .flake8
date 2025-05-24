@@ -1,0 +1,21 @@
+[flake8]
+max-line-length = 88
+extend-ignore = E203, W503
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    *.egg,
+    # Исключаем все миграции
+    */migrations/*,
+    migrations,
+    alembic,
+    */alembic/*
+per-file-ignores =
+    # Разрешаем неиспользуемые импорты в __init__.py
+    __init__.py:F401
+    # Разрешаем импорты в env.py для Alembic
+    */env.py:F401

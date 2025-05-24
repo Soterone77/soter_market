@@ -15,8 +15,9 @@ def create_register_confirmation_template(
     email["To"] = email_to
 
     email.set_content(
-        f"""
+        """
             <h1>Вы совершили регистрацию на Soter Market</h1>
+            Добро пожаловать на наш сайт!
         """,
         subtype="html",
     )

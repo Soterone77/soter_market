@@ -79,7 +79,7 @@ async def auth_middleware(request: Request, call_next):
         UserIsNotPresentException,
     ) as e:
         return JSONResponse(status_code=401, content={"detail": str(e)})
-    except Exception as e:
+    except Exception:
         return JSONResponse(
             status_code=500,
             content={"detail": "Внутренняя ошибка сервера"},

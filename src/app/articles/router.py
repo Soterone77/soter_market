@@ -16,12 +16,8 @@ import uuid
 import os
 
 from app.articles.dao import ArticlesDAO
-from app.articles.deleted_dao import DeletedArticlesDAO
 from app.articles.schemas import (
     ArticleInDB,
-    ArticleCreate,
-    ArticleUpdate,
-    DeletedArticleInDB,
     ArticleListResponse,
 )
 from app.users.dependencies import get_current_user
@@ -154,7 +150,8 @@ async def create_article(
         if image.content_type not in ALLOWED_IMAGE_TYPES:
             raise HTTPException(
                 status_code=400,
-                detail=f"Недопустимый тип файла. Разрешены: {', '.join(ALLOWED_IMAGE_TYPES)}",
+                detail=f"Недопустимый тип файла. "
+                f"Разрешены: {', '.join(ALLOWED_IMAGE_TYPES)}",
             )
 
         # Проверка размера файла
@@ -162,7 +159,8 @@ async def create_article(
         if len(contents) > MAX_IMAGE_SIZE:
             raise HTTPException(
                 status_code=400,
-                detail=f"Файл слишком большой. Максимальный размер: {MAX_IMAGE_SIZE // 1024 // 1024} MB",
+                detail=f"Файл слишком большой. "
+                f"Максимальный размер: {MAX_IMAGE_SIZE // 1024 // 1024} MB",
             )
 
         # Генерация уникального имени файла
@@ -172,10 +170,14 @@ async def create_article(
         try:
             # Загрузка в S3
             await s3_client.upload_file_from_memory(contents, unique_filename)
-            image_url = f"{settings.S3_ENDPOINT_URL}/{settings.S3_BUCKET_NAME}/{unique_filename}"
+            image_url = (
+                f"{settings.S3_ENDPOINT_URL}/{settings.S3_BUCKET_NAME}"
+                f"/{unique_filename}"
+            )
         except Exception as e:
             raise HTTPException(
-                status_code=500, detail=f"Ошибка при загрузке изображения: {str(e)}"
+                status_code=500,
+                detail=f"Ошибка при загрузке изображения: {str(e)}",
             )
 
     new_article = await ArticlesDAO.add(
@@ -191,9 +193,12 @@ async def create_article(
         if image_url:
             try:
                 await s3_client.delete_file(unique_filename)
-            except:
+            except Exception:
                 pass  # Игнорируем ошибки удаления
-        raise HTTPException(status_code=500, detail="Ошибка при создании статьи")
+        raise HTTPException(
+            status_code=500,
+            detail="Ошибка при создании статьи",
+        )
 
     # Получаем полную информацию о созданной статье
     created_article = await ArticlesDAO.find_one_or_none(id=new_article["id"])
@@ -237,14 +242,16 @@ async def update_article(
         if image.content_type not in ALLOWED_IMAGE_TYPES:
             raise HTTPException(
                 status_code=400,
-                detail=f"Недопустимый тип файла. Разрешены: {', '.join(ALLOWED_IMAGE_TYPES)}",
+                detail=f"Недопустимый тип файла. "
+                f"Разрешены: {', '.join(ALLOWED_IMAGE_TYPES)}",
             )
 
         contents = await image.read()
         if len(contents) > MAX_IMAGE_SIZE:
             raise HTTPException(
                 status_code=400,
-                detail=f"Файл слишком большой. Максимальный размер: {MAX_IMAGE_SIZE // 1024 // 1024} MB",
+                detail=f"Файл слишком большой. "
+                f"Максимальный размер: {MAX_IMAGE_SIZE // 1024 // 1024} MB",
             )
 
         # Генерация уникального имени файла
@@ -254,20 +261,26 @@ async def update_article(
         try:
             # Загрузка нового изображения
             await s3_client.upload_file_from_memory(contents, unique_filename)
-            new_image_url = f"{settings.S3_ENDPOINT_URL}/{settings.S3_BUCKET_NAME}/{unique_filename}"
+            new_image_url = (
+                f"{settings.S3_ENDPOINT_URL}/{settings.S3_BUCKET_NAME}"
+                f"/{unique_filename}"
+            )
 
             # Удаление старого изображения, если оно есть
             if existing_article.get("image_url"):
                 old_filename = existing_article["image_url"].split("/")[-1]
                 try:
-                    await s3_client.delete_file(f"articles/{user.id}/{old_filename}")
-                except:
+                    await s3_client.delete_file(
+                        f"articles/" f"{user.id}/{old_filename}"
+                    )
+                except Exception:
                     pass  # Игнорируем ошибки удаления старого файла
 
             update_data["image_url"] = new_image_url
         except Exception as e:
             raise HTTPException(
-                status_code=500, detail=f"Ошибка при загрузке изображения: {str(e)}"
+                status_code=500,
+                detail=f"Ошибка при загрузке изображения: {str(e)}",
             )
 
     if update_data:  # Если есть что обновлять
@@ -279,7 +292,10 @@ async def update_article(
         )
 
         if not updated_article:
-            raise HTTPException(status_code=500, detail="Ошибка при обновлении статьи")
+            raise HTTPException(
+                status_code=500,
+                detail="Ошибка при обновлении статьи",
+            )
 
         return updated_article
 
@@ -288,7 +304,10 @@ async def update_article(
 
 
 @router.delete("/{article_id}")
-async def delete_article(article_id: int, user: Users = Depends(get_current_user)):
+async def delete_article(
+    article_id: int,
+    user: Users = Depends(get_current_user),
+):
     """Удалить статью (только свою) - настоящее фейковое удаление"""
 
     # Проверяем, существует ли статья
@@ -298,12 +317,18 @@ async def delete_article(article_id: int, user: Users = Depends(get_current_user
 
     # Проверяем, что статья принадлежит текущему пользователю
     if existing_article["user_id"] != user.id:
-        raise HTTPException(status_code=403, detail="Нет прав для удаления этой статьи")
+        raise HTTPException(
+            status_code=403,
+            detail="Нет прав для удаления этой статьи",
+        )
 
     # Выполняем настоящее фейковое удаление (перемещение в deleted_articles)
     deleted_article = await ArticlesDAO.hard_fake_delete(article_id)
 
     if not deleted_article:
-        raise HTTPException(status_code=500, detail="Ошибка при удалении статьи")
+        raise HTTPException(
+            status_code=500,
+            detail="Ошибка при удалении статьи",
+        )
 
     return {"message": "Статья успешно удалена"}

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional, Tuple, List, Dict, Any
 from sqlalchemy import select, func, or_
-from app.articles.models import Articles, DeletedArticles
+from app.articles.models import Articles
 from app.articles.deleted_dao import DeletedArticlesDAO
 from app.repo.base import BaseDAO
 from app.core.database import async_session_maker

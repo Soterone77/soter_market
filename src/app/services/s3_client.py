@@ -1,9 +1,7 @@
-import asyncio
 from contextlib import asynccontextmanager
 
 from aiobotocore.session import get_session
 from botocore.exceptions import ClientError
-from app.core.config import settings
 
 
 class S3Client:
@@ -82,21 +80,3 @@ class S3Client:
                 print(f"File {object_name} downloaded to {destination_path}")
         except ClientError as e:
             print(f"Error downloading file: {e}")
-
-
-async def main():
-    s3_client = S3Client(
-        access_key=settings.S3_ACCESS_KEY,
-        secret_key=settings.S3_SECRET_KEY,
-        endpoint_url=settings.S3_ENDPOINT_URL,
-        bucket_name=settings.S3_BUCKET_NAME,
-    )
-
-    # Проверка, что мы можем загрузить, скачать и удалить файл
-    # await s3_client.upload_file("test.txt")
-    # await s3_client.get_file("test.txt", "text_local_file.txt")
-    # await s3_client.delete_file("test.txt")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
