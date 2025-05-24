@@ -3,7 +3,7 @@ import math
 import os
 import uuid
 from datetime import datetime
-from typing import Annotated, Optional
+from typing import Annotated
 
 from fastapi import (
     APIRouter,
@@ -45,11 +45,9 @@ s3_client = S3Client(
 @router.get("/", response_model=ArticleListResponse)
 async def get_articles(
     search: Annotated[
-        Optional[str], Query(description="Поиск по заголовку и содержимому")
+        str | None, Query(description="Поиск по заголовку и содержимому")
     ] = None,
-    category_id: Annotated[
-        Optional[int], Query(description="Фильтр по категории")
-    ] = None,
+    category_id: Annotated[int | None, Query(description="Фильтр по категории")] = None,
     page_number: Annotated[int, Query(ge=1, description="Номер страницы")] = 1,
     page_size: Annotated[
         int, Query(ge=1, le=MAX_PAGE_SIZE, description="Размер страницы")
@@ -82,11 +80,9 @@ async def get_articles(
 async def get_my_articles(
     user: Users = Depends(get_current_user),
     search: Annotated[
-        Optional[str], Query(description="Поиск по заголовку и содержимому")
+        str | None, Query(description="Поиск по заголовку и содержимому")
     ] = None,
-    category_id: Annotated[
-        Optional[int], Query(description="Фильтр по категории")
-    ] = None,
+    category_id: Annotated[int | None, Query(description="Фильтр по категории")] = None,
     page_number: Annotated[int, Query(ge=1, description="Номер страницы")] = 1,
     page_size: Annotated[
         int, Query(ge=1, le=MAX_PAGE_SIZE, description="Размер страницы")
@@ -133,9 +129,7 @@ async def create_article(
     title: Annotated[str, Form(description="Название статьи")],
     content: Annotated[str, Form(description="Содержимое статьи")],
     category_id: Annotated[int, Form(description="ID категории")],
-    image: Annotated[
-        Optional[UploadFile], File(description="Изображение статьи")
-    ] = None,
+    image: Annotated[UploadFile | None, File(description="Изображение статьи")] = None,
     user: Users = Depends(get_current_user),
 ) -> ArticleInDB:
     """Создать новую статью с возможностью загрузки изображения"""
@@ -206,10 +200,10 @@ async def create_article(
 @router.put("/{article_id}")
 async def update_article(
     article_id: int,
-    title: Annotated[Optional[str], Form()] = None,
-    content: Annotated[Optional[str], Form()] = None,
-    category_id: Annotated[Optional[int], Form()] = None,
-    image: Annotated[Optional[UploadFile], File()] = None,
+    title: Annotated[str | None, Form()] = None,
+    content: Annotated[str | None, Form()] = None,
+    category_id: Annotated[int | None, Form()] = None,
+    image: Annotated[UploadFile | None, File()] = None,
     user: Users = Depends(get_current_user),
 ) -> ArticleInDB:
     """Обновить статью (только свою) с возможностью изменения изображения"""

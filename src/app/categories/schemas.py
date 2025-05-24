@@ -1,6 +1,5 @@
 # schemas/models.py
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -18,7 +17,7 @@ class CategoryCreate(CategoryBase):
 class CategoryUpdate(CategoryBase):
     """Схема для обновления категории."""
 
-    name: Optional[str] = None
+    name: str | None = None
 
 
 class CategoryInDB(CategoryBase):

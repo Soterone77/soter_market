@@ -1,6 +1,5 @@
 # schemas/models.py
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 
@@ -26,9 +25,9 @@ class UserAuth(UserBase):
 class UserUpdate(BaseModel):
     """Схема для обновления пользователя."""
 
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
-    is_active: Optional[bool] = None
+    email: EmailStr | None = None
+    password: str | None = None
+    is_active: bool | None = None
 
 
 class UserInDB(UserBase):

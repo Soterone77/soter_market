@@ -1,6 +1,5 @@
 # app/schemas/articles.py
 from datetime import datetime
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -24,10 +23,10 @@ class ArticleCreate(ArticleBase):
 class ArticleUpdate(BaseModel):
     """Схема для обновления статьи."""
 
-    title: Optional[str] = None
-    content: Optional[str] = None
-    image_url: Optional[str] = None
-    category_id: Optional[int] = None
+    title: str | None = None
+    content: str | None = None
+    image_url: str | None = None
+    category_id: int | None = None
 
 
 class ArticleInDB(ArticleBase):
@@ -52,7 +51,7 @@ class Article(ArticleInDB):
 class ArticleListResponse(BaseModel):
     """Схема для списка статей с пагинацией."""
 
-    items: List[ArticleInDB]
+    items: list[ArticleInDB]
     total: int
     page: int
     page_size: int

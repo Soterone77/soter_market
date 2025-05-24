@@ -51,12 +51,10 @@ def _is_excluded_path(path: str) -> bool:
     """Проверяет, исключен ли путь из аутентификации"""
     if path in EXCLUDED_PATHS:
         return True
-
-    excluded_prefixes = ["/docs", "/redoc", "/static", "/auth", "/hello"]
-    for prefix in excluded_prefixes:
-        if path.startswith(prefix):
-            return True
-    return False
+    return any(
+        path.startswith(prefix)
+        for prefix in ["/docs", "/redoc", "/static", "/auth", "/hello"]
+    )
 
 
 @app.middleware("http")

@@ -1,5 +1,5 @@
 import os
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_PORT: int
     DB_USER: str
-    DB_PASS: Optional[str] = ""
+    DB_PASS: str | None = ""
     DB_NAME: str
 
     @property

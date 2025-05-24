@@ -1,6 +1,6 @@
 # models/models.py
 from datetime import datetime
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -24,4 +24,4 @@ class Users(Base):
     )
 
     # Связь со статьями
-    articles: Mapped[List["Articles"]] = relationship(back_populates="user")
+    articles: Mapped[list["Articles"]] = relationship(back_populates="user")

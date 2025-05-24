@@ -1,5 +1,4 @@
 # app/categories/router.py (упрощенная версия)
-from typing import List
 
 from fastapi import APIRouter, HTTPException, status
 
@@ -9,7 +8,7 @@ from app.categories.schemas import CategoryCreate, CategoryInDB
 router = APIRouter(prefix="/categories", tags=["Категории"])
 
 
-@router.get("/", response_model=List[CategoryInDB])
+@router.get("/", response_model=list[CategoryInDB])
 async def get_categories():
     """Получить список всех категорий"""
     return await CategoriesDAO.find_all()

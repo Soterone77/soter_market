@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from sqlalchemy import func, or_, select
 
@@ -17,10 +17,10 @@ class ArticlesDAO(BaseDAO):
         cls,
         page: int = 1,
         page_size: int = 10,
-        search: Optional[str] = None,
-        category_id: Optional[int] = None,
-        user_id: Optional[int] = None,
-    ) -> Tuple[List[Dict[str, Any]], int]:
+        search: str | None = None,
+        category_id: int | None = None,
+        user_id: int | None = None,
+    ) -> tuple[list[dict[str, Any]], int]:
         """
         Найти статьи с пагинацией, поиском и фильтрацией
         Возвращает кортеж (список_статей, общее_количество)
