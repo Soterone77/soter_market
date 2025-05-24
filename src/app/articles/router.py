@@ -1,29 +1,27 @@
 # app/articles/router.py
+import math
+import os
+import uuid
+from datetime import datetime
+from typing import Annotated, Optional
+
 from fastapi import (
     APIRouter,
     Depends,
-    HTTPException,
-    Query,
-    status,
-    UploadFile,
     File,
     Form,
+    HTTPException,
+    Query,
+    UploadFile,
+    status,
 )
-from typing import Annotated, Optional
-from datetime import datetime
-import math
-import uuid
-import os
 
 from app.articles.dao import ArticlesDAO
-from app.articles.schemas import (
-    ArticleInDB,
-    ArticleListResponse,
-)
+from app.articles.schemas import ArticleInDB, ArticleListResponse
+from app.core.config import settings
+from app.services.s3_client import S3Client
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-from app.services.s3_client import S3Client
-from app.core.config import settings
 
 router = APIRouter(prefix="/articles", tags=["Статьи"])
 

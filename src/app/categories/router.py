@@ -1,6 +1,7 @@
 # app/categories/router.py (упрощенная версия)
-from fastapi import APIRouter, HTTPException, status
 from typing import List
+
+from fastapi import APIRouter, HTTPException, status
 
 from app.categories.dao import CategoriesDAO
 from app.categories.schemas import CategoryCreate, CategoryInDB

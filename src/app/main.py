@@ -1,16 +1,17 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
 from app.articles.router import router as router_articles
 from app.categories.router import router as router_categories
-from app.users.router import router_users, router_auth
-from app.users.dependencies import get_current_user, get_token
 from app.exceptions import (
+    IncorrectTokenFormatException,
     TokenAbsentException,
     TokenExpiredException,
-    IncorrectTokenFormatException,
     UserIsNotPresentException,
 )
+from app.users.dependencies import get_current_user, get_token
+from app.users.router import router_auth, router_users
 
 app = FastAPI()
 

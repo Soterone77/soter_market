@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 
 import pytest
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy import insert
 
 from app.articles.models import Articles, DeletedArticles

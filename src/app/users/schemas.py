@@ -1,6 +1,7 @@
 # schemas/models.py
 from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -44,5 +45,3 @@ class UserInDB(UserBase):
 
 class User(UserInDB):
     """Полная схема пользователя для ответов API."""
-
-    pass

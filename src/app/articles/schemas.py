@@ -1,6 +1,7 @@
 # app/schemas/articles.py
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
+
 from pydantic import BaseModel
 
 from app.categories.schemas import Category
@@ -18,8 +19,6 @@ class ArticleBase(BaseModel):
 
 class ArticleCreate(ArticleBase):
     """Схема для создания статьи."""
-
-    pass
 
 
 class ArticleUpdate(BaseModel):
@@ -86,5 +85,3 @@ class DeletedArticleInDB(DeletedArticleBase):
 
 class DeletedArticle(DeletedArticleInDB):
     """Полная схема удаленной статьи для ответов API."""
-
-    pass
