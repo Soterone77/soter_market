@@ -4,4 +4,93 @@ version = "0.1.0"
 description = "Soter Market"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "aiobotocore>=2.22.0",
+    "alembic>=1.15.2",
+    "asyncpg>=0.30.0",
+    "celery>=5.5.2",
+    "fastapi-cache2[redis]>=0.2.2",
+    "fastapi[standard]>=0.115.12",
+    "flower>=2.0.1",
+    "greenlet>=3.2.2",
+    "gunicorn>=23.0.0",
+    "httpx>=0.28.1",
+    "passlib[bcrypt]>=1.7.4",
+    "pillow>=11.2.1",
+    "pydantic-settings>=2.9.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+    "python-jose>=3.4.0",
+    "python-json-logger>=3.3.0",
+    "sqlalchemy>=2.0.41",
+]
+
+[dependency-groups]
+dev = [
+    "flake8>=7.2.0",
+    "isort>=6.0.1",
+    "pre-commit>=4.2.0",
+    "ruff>=0.11.11",
+]
+
+# === Настройки инструментов разработки ===
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+src = ["src"]
+exclude = [
+    "migrations",
+    "alembic",
+    ".venv",
+    "venv",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+    "B008",  # do not perform function calls in argument defaults
+    "SIM105", # use contextlib.suppress instead of try-except-pass
+    "B904",  # raise without from inside except
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/*" = ["S101"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["app"]
+skip = ["migrations", "alembic"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | migrations
+  | alembic
+)/
+'''
