@@ -1,22 +1,27 @@
 from datetime import datetime, timedelta
 
+import bcrypt
 from jose import jwt
-from passlib.context import CryptContext
 from pydantic import EmailStr
 
 from app.core.config import settings
 from app.exceptions import IncorrectEmailOrPasswordException
 from app.users.dao import UserDAO
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    """Хеширует пароль с помощью bcrypt"""
+    password_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    return hashed.decode("utf-8")
 
 
-def verify_password(plain_password, hashed_password) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Проверяет пароль против хеша"""
+    password_bytes = plain_password.encode("utf-8")
+    hashed_bytes = hashed_password.encode("utf-8")
+    return bcrypt.checkpw(password_bytes, hashed_bytes)
 
 
 def create_access_token(data: dict) -> str:
