@@ -44,6 +44,7 @@ EXCLUDED_PATHS = {
     "/auth/register",
     "/",
     "/hello",
+    "/health",  # Healthcheck теперь публичный
 }
 
 
@@ -53,7 +54,7 @@ def _is_excluded_path(path: str) -> bool:
         return True
     return any(
         path.startswith(prefix)
-        for prefix in ["/docs", "/redoc", "/static", "/auth", "/hello"]
+        for prefix in ["/docs", "/redoc", "/static", "/auth", "/hello", "/health"]
     )
 
 
@@ -103,3 +104,12 @@ async def root():
 @app.get("/hello/{name}")
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
+
+
+# --- Healthcheck endpoint ---
+# Публичный эндпоинт для проверки "живости" микросервиса.
+# Не требует авторизации, не зависит от БД и других сервисов.
+# Используется для Docker/Kubernetes healthcheck и мониторинга.
+@app.get("/health", tags=["Healthcheck"])
+async def healthcheck():
+    return {"status": "ok"}

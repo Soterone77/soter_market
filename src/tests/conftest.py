@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from datetime import datetime
 
 import pytest
@@ -14,6 +15,14 @@ from app.main import app as fastapi_app
 from app.users.models import Users
 
 
+def open_mock_json(model: str):
+    # Абсолютный путь к mock-файлам относительно этого файла
+    base_dir = os.path.dirname(__file__)
+    file_path = os.path.join(base_dir, f"mock_{model}.json")
+    with open(file_path, encoding="utf-8") as file:
+        return json.load(file)
+
+
 @pytest.fixture(scope="session", autouse=True)
 async def prepare_database():
     # Обязательно убеждаемся, что работаем с тестовой БД
@@ -24,10 +33,6 @@ async def prepare_database():
         await conn.run_sync(Base.metadata.drop_all)
         # Добавление всех заданных нами таблиц из БД
         await conn.run_sync(Base.metadata.create_all)
-
-    def open_mock_json(model: str):
-        with open(f"tests/mock_{model}.json", encoding="utf-8") as file:
-            return json.load(file)
 
     users = open_mock_json("users")
     categories = open_mock_json("categories")
