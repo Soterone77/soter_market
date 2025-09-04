@@ -1,0 +1,24 @@
+[flake8]
+max-line-length = 88
+extend-ignore = E203, W503, B008, S101, S110, T201, E231
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    *.egg,
+    # Исключаем все миграции
+    */migrations/*,
+    migrations,
+    alembic,
+    */alembic/*
+per-file-ignores =
+    # Разрешаем неиспользуемые импорты в __init__.py
+    __init__.py:F401
+    # Разрешаем импорты в env.py для Alembic
+    */env.py:F401
+    # Игнорируем assert в тестах
+    tests/*:S101,PT004,PT006,PT003
+    */tests/*:S101,PT004,PT006,PT003

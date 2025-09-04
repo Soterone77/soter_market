@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+.idea/
+.vscode/
+*.log
+.env
+.env.*
+!.env-example
+.git/
+*.sqlite3
+pytest.ini
+alembic.ini
